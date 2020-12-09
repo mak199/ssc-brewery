@@ -2,6 +2,7 @@ package guru.sfg.brewery.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -30,8 +31,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
-    // this overrides the spring security auto configuration implementation in properties file
+    // {noop} stores password as free text and does nto encrypt it
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("spring")
+                .password("{noop}guru")
+                .roles("ADMIN")
+                .and()
+                .withUser("user")
+                .password("{noop}password")
+                .roles("USER")
+        ;
+    }
+
+    // this overrides the spring security auto configuration implementation in properties file
+  /*  @Override
     @Bean
     protected UserDetailsService userDetailsService() {
         UserDetails admin = User.withDefaultPasswordEncoder()
@@ -45,5 +60,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(admin,user);
-     }
+     }*/
 }
