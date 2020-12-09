@@ -42,4 +42,10 @@ public class BeerControllerIT extends BaseIT{
                 .andExpect(model().attributeExists("beer"));
     }
 
+    @Test
+    public void findBeerWithSecurityConfigAuthentication() throws Exception {
+        mockMvc.perform(get("/beers/find"))
+        .andExpect(status().isOk());
+    }
+
 }
