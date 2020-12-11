@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
 
@@ -44,17 +45,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // {noop} stores password as free text and does nto encrypt it
+    // different users and different password encoders
+    // the key in front of encoders tells spring which encoding is worming for the password
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("spring")
-                .password("$2a$10$iX/Be0mRvvSUJgo/5.B0Vu68kg4EUNgA/bnZaWLxG2mx3N3oGyAeS")
+                .password("{bcrypt}$2a$10$ZjguNDOfg/GNnDuQsommReZHcrjc0E/oYeKefGrWzQtFpBGijpLli")
                 .roles("ADMIN")
                 .and()
                 .withUser("user")
-                .password("$2a$10$iX/Be0mRvvSUJgo/5.B0Vu68kg4EUNgA/bnZaWLxG2mx3N3oGyAeS")
+                .password("{sha256}cd3daa627b56f9b74fe89837ca85b1f9a0574190b21ee4e0cd989a91f5333d0ef9beffaae5e70350")
                 .roles("USER")
         ;
+        auth.inMemoryAuthentication().withUser("scott").password("{ldap}{SSHA}VbkhtZegdcypR2f6CexzsCIWckIvINR6xQ2f9Q==").roles("CUSTOMER");
     }
 
     // this overrides the spring security auto configuration implementation in properties file
