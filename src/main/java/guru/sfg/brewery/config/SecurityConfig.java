@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .password("{sha256}cd3daa627b56f9b74fe89837ca85b1f9a0574190b21ee4e0cd989a91f5333d0ef9beffaae5e70350")
                 .roles("USER")
         ;
-        auth.inMemoryAuthentication().withUser("scott").password("{ldap}{SSHA}VbkhtZegdcypR2f6CexzsCIWckIvINR6xQ2f9Q==").roles("CUSTOMER");
+        auth.inMemoryAuthentication().withUser("scott").password("{bcrypt15}$2a$15$F5ReVlRyjiLIGL6QX5E7puVvsI3dFUKVH5huR5GDILYkTc/EcYd/K").roles("CUSTOMER");
     }
 
     // this overrides the spring security auto configuration implementation in properties file
