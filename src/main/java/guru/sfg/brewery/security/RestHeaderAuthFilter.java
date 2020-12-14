@@ -16,8 +16,9 @@ import java.io.IOException;
 @Slf4j
 public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter {
 
+    // overriding AbstractAuthenticationProcessingFilter
 
-    protected RestHeaderAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+    public RestHeaderAuthFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
     }
 

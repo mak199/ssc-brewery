@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @WebMvcTest
 public class BeerRestControllerIT extends BaseIT{
 
+    // testing RestHeaderAuthFilter
     @Test
     public void deleteBeer() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310")
