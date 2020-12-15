@@ -1,6 +1,8 @@
 package guru.sfg.brewery.config;
+import guru.sfg.brewery.security.JPAUserDetailService;
 import guru.sfg.brewery.security.RestHeaderAuthFilter;
 import guru.sfg.brewery.security.SfgPasswordEncoderFactories;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -35,12 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-
     // allowing web traffic to go to those specific URLs
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -67,12 +63,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin();
     }
 
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
     // {noop} stores password as free text and does nto encrypt it
     // different users and different password encoders
     // the key in front of encoders tells spring which encoding is worming for the password
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+    //@Override
+   // protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //auth.userDetailsService(this.jpaUserDetailService).passwordEncoder(passwordEncoder());
+
+        /*auth.inMemoryAuthentication()
                 .withUser("spring")
                 .password("{bcrypt}$2a$10$ZjguNDOfg/GNnDuQsommReZHcrjc0E/oYeKefGrWzQtFpBGijpLli")
                 .roles("ADMIN")
@@ -82,7 +85,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("USER")
         ;
         auth.inMemoryAuthentication().withUser("scott").password("{bcrypt15}$2a$15$F5ReVlRyjiLIGL6QX5E7puVvsI3dFUKVH5huR5GDILYkTc/EcYd/K").roles("CUSTOMER");
-    }
+        */
+   // }
 
     // this overrides the spring security auto configuration implementation in properties file
   /*  @Override
