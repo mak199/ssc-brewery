@@ -30,7 +30,7 @@ public class UserDataLoader implements CommandLineRunner {
 
         userRepository.save(User.builder().username("spring").password(passwordEncoder.encode("guru")).authority(admin).build());
         userRepository.save(User.builder().username("user").password(passwordEncoder.encode("password")).authority(userRole).build());
-        userRepository.save(User.builder().username("Scott").password(passwordEncoder.encode("tiger")).authority(customer).build());
+        userRepository.save(User.builder().username("scott").password(passwordEncoder.encode("tiger")).authority(customer).build());
 
         System.out.println("User Loaded:"+userRepository.count());
 
