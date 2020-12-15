@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests(authorize->{
             authorize
+                    .antMatchers("/h2-console/**").permitAll() // do not use in production
                     .antMatchers("/","/beers/find","/webjars/**","/resources/**").permitAll()
                     .mvcMatchers(HttpMethod.GET,"/api/v1/beer/**").permitAll()
                     .mvcMatchers(HttpMethod.GET,"/api/v1/beerUpc/{upc}").permitAll();
@@ -61,6 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .and()
                 .httpBasic();
+
+        // h2 console config, allows h2-console to function normally by allowing h2 frames
+        http.headers().frameOptions().sameOrigin();
     }
 
     // {noop} stores password as free text and does nto encrypt it
