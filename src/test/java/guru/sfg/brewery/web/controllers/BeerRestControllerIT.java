@@ -20,13 +20,6 @@ public class BeerRestControllerIT extends BaseIT{
     }
 
     @Test
-    public void deleteBeerBadCredentials() throws Exception {
-        mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310")
-                .header("Api-Key","spring").header("Api-Secret","guruXXX"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     public void deleteBeerHttpBasic() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310")
                 .with(httpBasic("spring","guru")))
@@ -34,10 +27,32 @@ public class BeerRestControllerIT extends BaseIT{
     }
 
     @Test
+    public void deleteBeerHttpBasicUserRole() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310")
+                .with(httpBasic("user","password")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteBeerHttpBasicCustomerRole() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310")
+                .with(httpBasic("scott","tiger")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void deleteBeerNoAuth() throws Exception {
         mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    public void deleteBeerBadCredentials() throws Exception {
+        mockMvc.perform(delete("/api/v1/beer/97df0c39-98c4-4ae0-b663-453e8e19c310")
+                .header("Api-Key","spring").header("Api-Secret","guruXXX"))
+                .andExpect(status().isUnauthorized());
+    }
+
 
     @Test
     public void findBeers() throws Exception {

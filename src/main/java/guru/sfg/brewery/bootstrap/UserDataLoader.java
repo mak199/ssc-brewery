@@ -24,9 +24,9 @@ public class UserDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Authority customer = authorityRepository.save(Authority.builder().role("CUSTOMER").build());
-        Authority admin = authorityRepository.save(Authority.builder().role("ADMIN").build());
-        Authority userRole = authorityRepository.save(Authority.builder().role("USER").build());
+        Authority customer = authorityRepository.save(Authority.builder().role("ROLE_CUSTOMER").build());
+        Authority admin = authorityRepository.save(Authority.builder().role("ROLE_ADMIN").build());
+        Authority userRole = authorityRepository.save(Authority.builder().role("ROLE_USER").build());
 
         userRepository.save(User.builder().username("spring").password(passwordEncoder.encode("guru")).authority(admin).build());
         userRepository.save(User.builder().username("user").password(passwordEncoder.encode("password")).authority(userRole).build());
