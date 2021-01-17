@@ -96,5 +96,18 @@ public class BeerRestControllerIT extends BaseIT{
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void findBeerFormCUSTOMER() throws Exception {
+        mockMvc.perform(get("/beers").param("beerName", "")
+                .with(httpBasic("scott", "tiger")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findBeerFormUSER() throws Exception {
+        mockMvc.perform(get("/beers").param("beerName", "")
+                .with(httpBasic("user", "password")))
+                .andExpect(status().is2xxSuccessful());
+    }
 
 }
