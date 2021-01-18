@@ -22,7 +22,7 @@ public abstract class BaseIT {
     @Autowired
     WebApplicationContext wac;
 
-    MockMvc mockMvc;
+    public MockMvc mockMvc;
 
     @BeforeEach
     void setUp(){
