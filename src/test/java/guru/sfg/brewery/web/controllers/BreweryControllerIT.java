@@ -15,21 +15,21 @@ public class BreweryControllerIT extends BaseIT{
     @Test
     void listBreweriesCUSTOMER() throws Exception {
         mockMvc.perform(get("/brewery/breweries")
-                .with(httpBasic("scott","tiger")))
+                .with(httpBasic("scott", "tiger")))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void listBreweriesADMIN() throws Exception {
         mockMvc.perform(get("/brewery/breweries")
-                .with(httpBasic("spring","guru")))
+                .with(httpBasic("spring", "guru")))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     void listBreweriesUSER() throws Exception {
         mockMvc.perform(get("/brewery/breweries")
-                .with(httpBasic("user","password")))
+                .with(httpBasic("user", "password")))
                 .andExpect(status().isForbidden());
     }
 
@@ -40,24 +40,29 @@ public class BreweryControllerIT extends BaseIT{
     }
 
     @Test
-    void listBreweriesJsonCUSTOMER() throws Exception {
+    void getBreweriesJsonCUSTOMER() throws Exception {
         mockMvc.perform(get("/brewery/api/v1/breweries")
-                .with(httpBasic("scott","tiger")))
+                .with(httpBasic("scott", "tiger")))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
-    void listBreweriesJsonADMIN() throws Exception {
+    void getBreweriesJsonADMIN() throws Exception {
         mockMvc.perform(get("/brewery/api/v1/breweries")
-                .with(httpBasic("spring","guru")))
+                .with(httpBasic("spring", "guru")))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
-    void listBreweriesJsonUSER() throws Exception {
+    void getBreweriesJsonUSER() throws Exception {
         mockMvc.perform(get("/brewery/api/v1/breweries")
-                .with(httpBasic("user","password")))
+                .with(httpBasic("user", "password")))
                 .andExpect(status().isForbidden());
     }
 
+    @Test
+    void getBreweriesJsonNOAUTH() throws Exception {
+        mockMvc.perform(get("/brewery/api/v1/breweries"))
+                .andExpect(status().isUnauthorized());
+    }
 }

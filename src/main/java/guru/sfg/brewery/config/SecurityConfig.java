@@ -49,13 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests(authorize->{
             authorize
-                    .antMatchers("/h2-console/**").permitAll() // do not use in production
-                    .antMatchers("/","/beers/find","/webjars/**","/resources/**").permitAll()
+                    .antMatchers("/h2-console/**").permitAll(); // do not use in production
+                    //.antMatchers("/","/beers/find","/webjars/**","/resources/**").permitAll()
                     //.mvcMatchers(HttpMethod.GET,"/api/v1/beer/**").permitAll()
                     //.mvcMatchers(HttpMethod.GET,"/api/v1/beerUpc/{upc}").permitAll()
-                    .mvcMatchers("/brewery/breweries")
-                        .hasAnyRole("ADMIN","CUSTOMER")
-                    .mvcMatchers(HttpMethod.GET,"/brewery/api/v1/breweries").hasAnyRole("ADMIN","CUSTOMER");
+                    //.mvcMatchers("/brewery/breweries")
+                    //    .hasAnyRole("ADMIN","CUSTOMER")
+                    //.mvcMatchers(HttpMethod.GET,"/brewery/api/v1/breweries").hasAnyRole("ADMIN","CUSTOMER");
         }).authorizeRequests()
                 .anyRequest()
                 .authenticated()
