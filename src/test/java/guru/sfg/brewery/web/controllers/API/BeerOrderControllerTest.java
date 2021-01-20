@@ -3,6 +3,7 @@ package guru.sfg.brewery.web.controllers.API;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.sfg.brewery.bootstrap.DefaultBreweryLoader;
 import guru.sfg.brewery.domain.Beer;
+import guru.sfg.brewery.domain.BeerOrder;
 import guru.sfg.brewery.domain.Customer;
 import guru.sfg.brewery.repositories.BeerOrderRepository;
 import guru.sfg.brewery.repositories.BeerRepository;
@@ -10,13 +11,14 @@ import guru.sfg.brewery.repositories.CustomerRepository;
 import guru.sfg.brewery.web.controllers.BaseIT;
 import guru.sfg.brewery.web.model.BeerOrderDto;
 import guru.sfg.brewery.web.model.BeerOrderLineDto;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class BeerOrderControllerTest extends BaseIT {
+class BeerOrderControllerTest extends BaseIT {
 
     public static final String API_ROOT = "/api/v1/customers/";
 
@@ -55,6 +57,11 @@ public class BeerOrderControllerTest extends BaseIT {
         keyWestCustomer = customerRepository.findAllByCustomerName(DefaultBreweryLoader.KEY_WEST_DISTRIBUTORS).orElseThrow();
         loadedBeers = beerRepository.findAll();
     }
+
+//cant use nested tests bug - https://github.com/spring-projects/spring-security/issues/8793
+//    @DisplayName("Create Test")
+//    @Nested
+//    class createOrderTests {
 
 
     @Test
@@ -108,6 +115,7 @@ public class BeerOrderControllerTest extends BaseIT {
                 .andExpect(status().isForbidden());
     }
 
+    // }
     @Test
     void listOrdersNotAuth() throws Exception {
         mockMvc.perform(get(API_ROOT + stPeteCustomer.getId() + "/orders"))
@@ -141,6 +149,45 @@ public class BeerOrderControllerTest extends BaseIT {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Transactional
+    @Test
+    void getByOrderIdNotAuth() throws Exception {
+        BeerOrder beerOrder = stPeteCustomer.getBeerOrders().stream().findFirst().orElseThrow();
+
+        mockMvc.perform(get(API_ROOT + stPeteCustomer.getId() + "/orders/" + beerOrder.getId()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Transactional
+    @WithUserDetails("spring")
+    @Test
+    void getByOrderIdADMIN() throws Exception {
+        BeerOrder beerOrder = stPeteCustomer.getBeerOrders().stream().findFirst().orElseThrow();
+
+        mockMvc.perform(get(API_ROOT + stPeteCustomer.getId() + "/orders/" + beerOrder.getId()))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Transactional
+    @WithUserDetails(DefaultBreweryLoader.STPETE_USER)
+    @Test
+    void getByOrderIdCustomerAuth() throws Exception {
+        BeerOrder beerOrder = stPeteCustomer.getBeerOrders().stream().findFirst().orElseThrow();
+
+        mockMvc.perform(get(API_ROOT + stPeteCustomer.getId() + "/orders/" + beerOrder.getId()))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Transactional
+    @WithUserDetails(DefaultBreweryLoader.DUNEDIN_USER)
+    @Test
+    void getByOrderIdCustomerNOTAuth() throws Exception {
+        BeerOrder beerOrder = stPeteCustomer.getBeerOrders().stream().findFirst().orElseThrow();
+
+        mockMvc.perform(get(API_ROOT + stPeteCustomer.getId() + "/orders/" + beerOrder.getId()))
+                .andExpect(status().isForbidden());
+    }
+
     @Disabled
     @Test
     void pickUpOrderNotAuth() {
@@ -160,7 +207,6 @@ public class BeerOrderControllerTest extends BaseIT {
     @Test
     void pickUpOrderCustomerUserNOT_AUTH() {
     }
-
 
     private BeerOrderDto buildOrderDto(Customer customer, UUID beerId) {
         List<BeerOrderLineDto> orderLines = Arrays.asList(BeerOrderLineDto.builder()
