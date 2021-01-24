@@ -17,6 +17,7 @@
 
 package guru.sfg.brewery.services;
 
+import guru.sfg.brewery.domain.Beer;
 import guru.sfg.brewery.domain.BeerOrder;
 import guru.sfg.brewery.domain.Customer;
 import guru.sfg.brewery.domain.OrderStatusEnum;
@@ -92,6 +93,13 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     @Override
     public BeerOrderDto getOrderById(UUID customerId, UUID orderId) {
         return beerOrderMapper.beerOrderToDto(getOrder(customerId, orderId));
+    }
+
+    @Override
+    public BeerOrderDto getOrderById(UUID orderId) {
+        BeerOrder beerOrder = beerOrderRepository.findOrderByIdSecure(orderId);
+        //log.debug("Found Order:"+beerOrder.getId());
+        return beerOrderMapper.beerOrderToDto(beerOrder);
     }
 
     @Override
