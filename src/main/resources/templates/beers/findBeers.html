@@ -30,7 +30,7 @@
 </form>
 
 <br />
-<a class="btn btn-default" th:href="@{/beers/new}">Add Beer</a>
+<a sec:authorize="${hasAuthority('beer.create')}" class="btn btn-default" th:href="@{/beers/new}">Add Beer</a>
 
 </body>
 </html>
