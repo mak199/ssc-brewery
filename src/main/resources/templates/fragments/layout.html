@@ -1,5 +1,5 @@
 <!doctype html>
-<html th:fragment="layout (template, menu)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (template, menu)">
 
 <head>
 
@@ -62,6 +62,11 @@
                 <li th:replace="::menuItem ('/brewery/breweries','breweries','breweries','th-list','Breweries')">
                     <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                     <span>Breweries</span>
+                </li>
+
+                <li th:replace="::menuItem ('/user/register2fa','user','register','th-list','Enable 2FA')">
+                    <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                    <span>Enable 2FA</span>
                 </li>
 
             </ul>
