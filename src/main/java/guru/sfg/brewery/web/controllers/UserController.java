@@ -25,29 +25,36 @@ public class UserController {
 
     @GetMapping("/register2fa")
     public String register2fa(Model model){
+
         User user = getUser();
-        String url = GoogleAuthenticatorQRGenerator.getOtpAuthURL("SFG",user.getUsername(),googleAuthenticator.createCredentials(user.getUsername()));
-        log.debug("Google QR URL:"+url);
-        model.addAttribute("googleurl",url);
+
+        String url = GoogleAuthenticatorQRGenerator.getOtpAuthURL("SFG", user.getUsername(),
+                googleAuthenticator.createCredentials(user.getUsername()));
+
+        log.debug("Google QR URL: " + url);
+
+        model.addAttribute("googleurl", url);
+
         return "user/register2fa";
     }
 
     @PostMapping("/register2fa")
-    public String confirm2fa(@RequestParam Integer verifyCode){
-        User user = getUser();
-        log.debug("Entered Code is:"+verifyCode);
+    public String confirm2Fa(@RequestParam Integer verifyCode){
 
-        if(googleAuthenticator.authorizeUser(user.getUsername(),verifyCode)){
+        User user = getUser();
+
+        log.debug("Entered Code is:" + verifyCode);
+
+        if (googleAuthenticator.authorizeUser(user.getUsername(), verifyCode)) {
             User savedUser = userRepository.findById(user.getID()).orElseThrow();
             savedUser.setUseGoogle2fa(true);
             userRepository.save(savedUser);
-            return "index";
-        }
-        else{
+
+            return "/index";
+        } else {
             // bad code
             return "user/register2fa";
         }
-
     }
 
     @GetMapping("/verify2fa")
@@ -56,16 +63,21 @@ public class UserController {
     }
 
     @PostMapping("/verify2fa")
-    public String verifyPostOf2fa(@RequestParam Integer verifyCode){
+    public String verifyPostOf2Fa(@RequestParam Integer verifyCode){
+
         User user = getUser();
-        if(googleAuthenticator.authorizeUser(user.getUsername(),verifyCode)){
+
+        if (googleAuthenticator.authorizeUser(user.getUsername(), verifyCode)) {
             ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setGoogle2faRequired(false);
+
             return "/index";
+        } else {
+            return "user/verify2fa";
         }
-        return "user/verify2fa";
     }
 
     private User getUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
 }
