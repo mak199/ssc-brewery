@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/register2fa")
-    public String confirm2Fa(@RequestParam Integer verifyCode){
+    public String confirm2fa(@RequestParam Integer verifyCode){
         User user = getUser();
         log.debug("Entered Code is:"+verifyCode);
 
@@ -48,6 +48,21 @@ public class UserController {
             return "user/register2fa";
         }
 
+    }
+
+    @GetMapping("/verify2fa")
+    public String verify2fa(){
+        return "user/verify2fa";
+    }
+
+    @PostMapping("/verify2fa")
+    public String verifyPostOf2fa(@RequestParam Integer verifyCode){
+        User user = getUser();
+        if(googleAuthenticator.authorizeUser(user.getUsername(),verifyCode)){
+            ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setGoogle2faRequired(false);
+            return "/index";
+        }
+        return "user/verify2fa";
     }
 
     private User getUser() {

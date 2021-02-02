@@ -82,12 +82,12 @@ public class User implements UserDetails, CredentialsContainer {
     private Boolean enabled = true;
 
     @Builder.Default
-    private Boolean userGoogle2Fa = false;
+    private Boolean useGoogle2fa = false;
 
-    private String google2FaSecret;
+    private String google2faSecret;
 
     @Transient // not gets saved to database
-    private Boolean google2FaRequired = true;
+    private Boolean google2faRequired = true;
 
     @Override
     public void eraseCredentials() {
